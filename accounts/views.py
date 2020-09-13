@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -55,6 +56,13 @@ def logoutUser(request):
 @admin_only
 def home(request):
 	orders = Order.objects.all()
+ # 分页
+	paginator = Paginator(orders, 5)
+	try:
+		page_nums = request.GET.get("index", 1)
+		pages = paginator.page(page_nums)
+	except PageNotAnInteger as e:
+		pages = paginator.page(1)
 	customers = Customer.objects.all()
 
 	total_customers = customers.count()
@@ -64,8 +72,8 @@ def home(request):
 	pending = orders.filter(status='Pending').count()
 
 	context = {'orders':orders, 'customers':customers,
-	'total_orders':total_orders,'delivered':delivered,
-	'pending':pending }
+	'total_orders':total_orders,'delivered':delivered,'page':pages,'paginator':paginator,
+	'pending':pending}
 
 	return render(request, 'accounts/dashboard.html', context)
 

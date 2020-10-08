@@ -6,6 +6,11 @@ python=3.6.5
 
 django==3.0.8
 
+## 网站
+http://122.51.234.202:8004/
+账号： admin
+密码：admin123
+
 ## 参考
 > https://github.com/divanov11/crash-course-CRM
 
